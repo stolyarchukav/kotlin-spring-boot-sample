@@ -1,10 +1,9 @@
 package test.api.image.image.rest
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.net.URL
 import java.util.concurrent.atomic.AtomicLong
 
 @RestController("image")
@@ -15,7 +14,13 @@ class ImageController(val storage : ImageStorage) {
     @GetMapping("/test")
     fun greeting() = counter.incrementAndGet()
 
-    @PostMapping
-    fun upload(@RequestParam("file") file : MultipartFile) = storage.storeFile(file)
+    @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun uploadMultipart(@RequestParam("files", required = true) files : List<MultipartFile>) = storage.storeFiles(files)
+
+    @PostMapping(consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
+    fun uploadUrl(@RequestParam("url", required = true) url : URL) = storage.storeUrl(url)
+
+    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun uploadEncoded(@RequestBody(required = true) image : EncodedImage) = println(image)
 
 }
