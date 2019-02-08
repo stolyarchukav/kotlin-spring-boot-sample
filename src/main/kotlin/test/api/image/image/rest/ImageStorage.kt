@@ -38,9 +38,10 @@ class ImageStorage {
         ImageIO.write(preview, "jpg", File("preview_$name.jpg"))
     }
 
-    fun storeUrl(url: URL, preview: Boolean) {
-        val storedFile = storeFile(url.openStream(), generateName())
-        storePreview(preview, storedFile)
+    fun storeUrl(urls: List<URL>, preview: Boolean) {
+        urls.forEach{url ->
+            storePreview(preview, storeFile(url.openStream(), generateName()))
+        }
     }
 
     private fun storePreview(preview: Boolean, storedFile: Path) {
