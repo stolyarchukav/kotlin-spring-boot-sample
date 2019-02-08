@@ -60,7 +60,7 @@ class ImageStorage {
 
     private fun generateName(): String {
         val timestamp = System.currentTimeMillis()
-        return "file_$timestamp.jpg"
+        return "image_$timestamp.jpg"
     }
 
     fun storeEncoded(image: EncodedImage) {
