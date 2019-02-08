@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "1358cbaa-da58-4521-8287-33c1f25a3df0",
+		"name": "image uploader",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload files",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files",
+							"type": "file",
+							"src": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload from url",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "https://www.google.com/imgres?imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fru%2Fthumb%2Fd%2Fdb%2FAC_Milan.svg%2F217px-AC_Milan.svg.png&imgrefurl=https%3A%2F%2Fru.wikipedia.org%2Fwiki%2F%25D0%259C%25D0%25B8%25D0%25BB%25D0%25B0%25D0%25BD_(%25D1%2584%25D1%2583%25D1%2582%25D0%25B1%25D0%25BE%25D0%25BB%25D1%258C%25D0%25BD%25D1%258B%25D0%25B9_%25D0%25BA%25D0%25BB%25D1%2583%25D0%25B1)&docid=xwDUBu0eUg2tFM&tbnid=DEwZxZOIggMFAM%3A&vet=10ahUKEwis5dKA2argAhXPDuwKHUjLA5wQMwhYKAAwAA..i&w=217&h=350&itg=1&bih=657&biw=1366&q=milan&ved=0ahUKEwis5dKA2argAhXPDuwKHUjLA5wQMwhYKAAwAA&iact=mrc&uact=8"
+				},
+				"url": {
+					"raw": "localhost:8080/test?url=https://media.parkimeter.com/images/blog/high/free-parking-in-milan-dac69a23f185c7621de0333753f39b50.jpg",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"test"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "https://media.parkimeter.com/images/blog/high/free-parking-in-milan-dac69a23f185c7621de0333753f39b50.jpg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload base64 encoded",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\" : \"file_1\",\n\t\"data\" : \"123\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
