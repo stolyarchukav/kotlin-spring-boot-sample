@@ -28,13 +28,19 @@
 					]
 				},
 				"url": {
-					"raw": "localhost:8080/test",
+					"raw": "localhost:8080/test?preview=true",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"test"
+					],
+					"query": [
+						{
+							"key": "preview",
+							"value": "true"
+						}
 					]
 				}
 			},
@@ -53,11 +59,22 @@
 					}
 				],
 				"body": {
-					"mode": "raw",
-					"raw": "https://www.google.com/imgres?imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fru%2Fthumb%2Fd%2Fdb%2FAC_Milan.svg%2F217px-AC_Milan.svg.png&imgrefurl=https%3A%2F%2Fru.wikipedia.org%2Fwiki%2F%25D0%259C%25D0%25B8%25D0%25BB%25D0%25B0%25D0%25BD_(%25D1%2584%25D1%2583%25D1%2582%25D0%25B1%25D0%25BE%25D0%25BB%25D1%258C%25D0%25BD%25D1%258B%25D0%25B9_%25D0%25BA%25D0%25BB%25D1%2583%25D0%25B1)&docid=xwDUBu0eUg2tFM&tbnid=DEwZxZOIggMFAM%3A&vet=10ahUKEwis5dKA2argAhXPDuwKHUjLA5wQMwhYKAAwAA..i&w=217&h=350&itg=1&bih=657&biw=1366&q=milan&ved=0ahUKEwis5dKA2argAhXPDuwKHUjLA5wQMwhYKAAwAA&iact=mrc&uact=8"
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "url",
+							"value": "https://www.destetravel.com/wp-content/uploads/2017/06/pistoia-600x380.jpg",
+							"type": "text"
+						},
+						{
+							"key": "url",
+							"value": "https://previews.123rf.com/images/tupungato/tupungato1507/tupungato150700122/42477395-lucca-italy-medieval-town-of-tuscany-aerial-view-with-guinigi-tower-.jpg",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "localhost:8080/test?url=https://media.parkimeter.com/images/blog/high/free-parking-in-milan-dac69a23f185c7621de0333753f39b50.jpg",
+					"raw": "localhost:8080/test?preview=true",
 					"host": [
 						"localhost"
 					],
@@ -67,8 +84,8 @@
 					],
 					"query": [
 						{
-							"key": "url",
-							"value": "https://media.parkimeter.com/images/blog/high/free-parking-in-milan-dac69a23f185c7621de0333753f39b50.jpg"
+							"key": "preview",
+							"value": "true"
 						}
 					]
 				}
@@ -92,13 +109,19 @@
 					"raw": "{\n\t\"name\" : \"file_1\",\n\t\"data\" : \"123\"\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/test",
+					"raw": "localhost:8080/test?preview=true",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"test"
+					],
+					"query": [
+						{
+							"key": "preview",
+							"value": "true"
+						}
 					]
 				}
 			},
