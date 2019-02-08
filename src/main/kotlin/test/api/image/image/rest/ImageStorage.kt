@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.awt.Image
 import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -12,6 +13,7 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
+import java.util.*
 import javax.imageio.ImageIO
 
 
@@ -59,6 +61,18 @@ class ImageStorage {
     private fun generateName(): String {
         val timestamp = System.currentTimeMillis()
         return "file_$timestamp.jpg"
+    }
+
+    fun storeEncoded(image: EncodedImage) {
+        val data = image.data
+        val parts = data.split(",")
+        val format = parts[0]
+        if (format != "data:image/jpeg;base64") {
+            throw InvalidRequestException("Unsupported data format: $format")
+        }
+        val base64 = parts[1]
+        val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(base64))
+        ImageIO.write(ImageIO.read(inputStream), "jpg", File("${image.name}.jpg"))
     }
 
 }

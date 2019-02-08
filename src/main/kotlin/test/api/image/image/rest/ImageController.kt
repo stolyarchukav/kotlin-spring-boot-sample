@@ -23,6 +23,6 @@ class ImageController(val storage : ImageStorage) {
                   @RequestParam("preview", defaultValue = "false") preview : Boolean) = storage.storeUrl(urls, preview)
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun uploadEncoded(@RequestBody(required = true) image : EncodedImage) = println(image)
+    fun uploadEncoded(@RequestBody(required = true) image : EncodedImage) = storage.storeEncoded(image)
 
 }
