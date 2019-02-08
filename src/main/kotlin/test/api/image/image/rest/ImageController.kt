@@ -15,10 +15,12 @@ class ImageController(val storage : ImageStorage) {
     fun greeting() = counter.incrementAndGet()
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun uploadMultipart(@RequestParam("files", required = true) files : List<MultipartFile>) = storage.storeFiles(files)
+    fun uploadMultipart(@RequestParam("files", required = true) files: List<MultipartFile>,
+                        @RequestParam("preview", defaultValue = "false") preview: Boolean) = storage.storeFiles(files, preview)
 
     @PostMapping(consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
-    fun uploadUrl(@RequestParam("url", required = true) url : URL) = storage.storeUrl(url)
+    fun uploadUrl(@RequestParam("url", required = true) url : URL,
+                  @RequestParam("preview", defaultValue = "false") preview : Boolean) = storage.storeUrl(url, preview)
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun uploadEncoded(@RequestBody(required = true) image : EncodedImage) = println(image)
