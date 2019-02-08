@@ -63,16 +63,29 @@ class ImageStorage {
         return "image_$timestamp.jpg"
     }
 
-    fun storeEncoded(image: EncodedImage) {
+    fun storeEncoded(images: List<EncodedImage>, preview: Boolean) {
+        images.forEach{image ->
+            val storedFile = storeEncoded(image)
+            storePreview(preview, storedFile)
+        }
+    }
+
+    private fun storeEncoded(image: EncodedImage): Path {
+        val base64 = getBase64(image)
+        val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(base64))
+        val file = File("${image.name}.jpg")
+        ImageIO.write(ImageIO.read(inputStream), "jpg", file)
+        return file.toPath()
+    }
+
+    private fun getBase64(image: EncodedImage): String {
         val data = image.data
         val parts = data.split(",")
         val format = parts[0]
         if (format != "data:image/jpeg;base64") {
             throw InvalidRequestException("Unsupported data format: $format")
         }
-        val base64 = parts[1]
-        val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(base64))
-        ImageIO.write(ImageIO.read(inputStream), "jpg", File("${image.name}.jpg"))
+        return parts[1]
     }
 
 }
