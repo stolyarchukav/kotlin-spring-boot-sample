@@ -1,9 +1,12 @@
-package test.api.image.image.rest
+package test.api.image.image.storage
 
 import org.apache.commons.io.FilenameUtils
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
+import test.api.image.image.exception.InternalServiceException
+import test.api.image.image.exception.InvalidRequestException
 import test.api.image.image.logger
+import test.api.image.image.rest.EncodedImage
 import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
@@ -15,6 +18,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.util.*
+import java.util.stream.Collectors
 import javax.imageio.ImageIO
 
 @Component
@@ -22,38 +26,54 @@ class FileImageStorage : ImageStorage {
 
     val log = logger()
 
-    override fun storeFiles(files: List<MultipartFile>, preview: Boolean) {
+    override fun storeFiles(files: List<MultipartFile>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store image files: {}, with preview: {}", files.size, preview)
-        files.forEach { file ->
+        return files.stream().map { file ->
             val fileName = file.originalFilename ?: generateName()
             try {
                 val storedFile = storeFile(file.inputStream, fileName)
-                storePreview(preview, storedFile)
+                val storedPreview = storePreview(preview, storedFile)
+                Pair(fileName, storedPreview)
             } catch (ex: IOException) {
                 throw InternalServiceException("Cannot save file $fileName")
             }
-        }
+        }.collect(Collectors.toList())
     }
 
-    override fun storeFromUrls(urls: List<URL>, preview: Boolean) {
+    override fun storeFromUrls(urls: List<URL>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store images from URLs: {}, with preview: {}", urls, preview)
-        urls.forEach{url ->
-            storePreview(preview, storeFile(url.openStream(), generateName()))
-        }
+        return urls.stream().map { url ->
+            val fileName = generateName()
+            val storedFile = storeFile(url.openStream(), fileName)
+            val storedPreview = storePreview(preview, storedFile)
+            Pair(fileName, storedPreview)
+        }.collect(Collectors.toList())
     }
 
-    private fun storePreview(path: Path) {
+    override fun storeEncodedBase64(images: List<EncodedImage>, preview: Boolean): List<Pair<String, String?>> {
+        log.info("Store encoded base 64 images: {}, with preview: {}", images, preview)
+        return images.stream().map { image ->
+            val storedFile = storeEncoded(image)
+            val storePreview = storePreview(preview, storedFile)
+            Pair(storedFile.fileName.toString(), storePreview)
+        }.collect(Collectors.toList())
+    }
+
+    private fun storePreview(path: Path): String {
         val preview = BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB)
         val image = ImageIO.read(path.toFile())
         preview.createGraphics().drawImage(image.getScaledInstance(100, 100, Image.SCALE_SMOOTH), 0, 0, null)
         val name = FilenameUtils.removeExtension(path.fileName.toString())
-        ImageIO.write(preview, "jpg", File("preview_$name.jpg"))
+        val fileName = "preview_$name.jpg"
+        ImageIO.write(preview, "jpg", File(fileName))
+        return fileName
     }
 
-    private fun storePreview(preview: Boolean, storedFile: Path) {
+    private fun storePreview(preview: Boolean, storedFile: Path): String? {
         if (preview) {
-            storePreview(storedFile)
+            return storePreview(storedFile)
         }
+        return null
     }
 
     private fun storeFile(stream: InputStream, fileName: String): Path {
@@ -65,14 +85,6 @@ class FileImageStorage : ImageStorage {
     private fun generateName(): String {
         val timestamp = System.currentTimeMillis()
         return "image_$timestamp.jpg"
-    }
-
-    override fun storeEncodedBase64(images: List<EncodedImage>, preview: Boolean) {
-        log.info("Store encoded base 64 images: {}, with preview: {}", images, preview)
-        images.forEach{image ->
-            val storedFile = storeEncoded(image)
-            storePreview(preview, storedFile)
-        }
     }
 
     private fun storeEncoded(image: EncodedImage): Path {

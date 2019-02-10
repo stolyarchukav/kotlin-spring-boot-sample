@@ -1,4 +1,4 @@
-package test.api.image.image.rest
+package test.api.image.image.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
