@@ -76,6 +76,16 @@ gradlew clean build
 gradlew integrationTest
 ~~~~
 
+#### Docker
+##### Build docker image
+~~~~
+docker build -t test/image-uploader .
+~~~~
+##### Run docker container
+~~~~
+docker run -p 8080:8080 test/image-uploader
+~~~~
+
 ### Postman project
 _measure.postman_collection.json_
 
