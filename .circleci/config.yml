@@ -33,7 +33,7 @@ jobs:
       - run: ./gradlew clean build integrationTest
 
       - run: docker build -t test/image-uploader .
-      - run: docker run -d 8080:8080 test/image-uploader
+      - run: docker save -o image-uploader.tar test/image-uploader
 
       - run:
           name: Save test results
