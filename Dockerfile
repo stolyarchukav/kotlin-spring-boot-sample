@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine as build
+FROM openjdk:11-jdk as build
 WORKDIR /workspace/app
 
 COPY gradlew .
@@ -9,7 +9,7 @@ COPY src src
 RUN chmod +x gradlew
 RUN ./gradlew clean build
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-jdk
 VOLUME /tmp
 
 COPY build/libs/*.jar app.jar
