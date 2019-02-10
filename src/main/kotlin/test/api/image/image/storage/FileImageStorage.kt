@@ -8,7 +8,6 @@ import test.api.image.image.logger
 import test.api.image.image.preview.PreviewStorage
 import test.api.image.image.rest.EncodedImage
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.net.URL
@@ -17,7 +16,6 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.util.*
 import java.util.stream.Collectors
-import javax.imageio.ImageIO
 
 @Component
 class FileImageStorage(val previewStorage: PreviewStorage) : ImageStorage {
@@ -78,9 +76,8 @@ class FileImageStorage(val previewStorage: PreviewStorage) : ImageStorage {
     private fun storeEncoded(image: EncodedImage): Path {
         val base64 = getBase64(image)
         val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(base64))
-        val file = File("${image.name}.jpg")
-        ImageIO.write(ImageIO.read(inputStream), "jpg", file)
-        return file.toPath()
+        val fileName = "${image.name}.jpg"
+        return storeFile(inputStream, fileName)
     }
 
     private fun getBase64(image: EncodedImage): String {
