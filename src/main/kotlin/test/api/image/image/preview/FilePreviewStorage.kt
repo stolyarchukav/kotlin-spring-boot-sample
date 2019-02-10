@@ -9,7 +9,7 @@ import java.nio.file.Path
 import javax.imageio.ImageIO
 
 @Component
-class FilePreviewStorage : PreviewStorage {
+final class FilePreviewStorage : PreviewStorage {
 
     override fun storePreview(imagePath: Path): String {
         val preview = BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB)

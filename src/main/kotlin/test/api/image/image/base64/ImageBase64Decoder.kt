@@ -9,7 +9,7 @@ import java.io.InputStream
 import java.util.*
 
 @Component
-class ImageBase64Decoder : Base64Decoder {
+final class ImageBase64Decoder : Base64Decoder {
 
     private val log = logger()
 

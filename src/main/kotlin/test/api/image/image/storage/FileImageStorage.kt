@@ -14,7 +14,7 @@ import java.nio.file.StandardCopyOption
 import java.util.stream.Collectors
 
 @Component
-class FileImageStorage(val previewStorage: PreviewStorage, val base64Decoder: Base64Decoder) : ImageStorage {
+final class FileImageStorage(private val previewStorage: PreviewStorage, private val base64Decoder: Base64Decoder) : ImageStorage {
 
     private val log = logger()
 
