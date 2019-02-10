@@ -30,8 +30,16 @@ jobs:
 
       - run: ./gradlew clean build integrationTest
 
-      - store_test_results:
-          path: build/test-results/test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+          when: always
+            - store_test_results:
+                path: ~/junit
+            - store_artifacts:
+                path: ~/junit
 
       - store_artifacts:
           path: build/libs/image-0.0.1-SNAPSHOT.jar
