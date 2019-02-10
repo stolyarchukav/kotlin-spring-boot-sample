@@ -6,7 +6,7 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 COPY src src
-RUN sudo chmod +x gradlew
+RUN chmod +x gradlew
 RUN ./gradlew clean build
 
 FROM openjdk:8-jdk-alpine
