@@ -76,5 +76,8 @@ gradlew clean build
 gradlew integrationTest
 ~~~~
 
-#### Postman project
+### Postman project
 _measure.postman_collection.json_
+
+### Continuous Integration
+https://circleci.com/gh/stolyarchukav/kotlin-spring-boot-sample
