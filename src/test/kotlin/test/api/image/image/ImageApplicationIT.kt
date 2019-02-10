@@ -1,6 +1,7 @@
 package test.api.image.image
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +20,7 @@ class ImageApplicationIT {
     private lateinit var restTemplate: TestRestTemplate
 
 	@Test
-	fun uploadEncoded() {
+	fun uploadEncodedWithPreview() {
         val responseEntity = restTemplate.postForEntity("/image?preview=true", listOf(image(1), image(2)), ImageResponse::class.java)
 
         assertEquals(HttpStatus.OK, responseEntity.statusCode)
@@ -29,6 +30,17 @@ class ImageApplicationIT {
         assertEquals("preview_integration_test_image_1.jpg", response?.names?.get(0)?.preview)
         assertEquals("integration_test_image_2.jpg", response?.names?.get(1)?.image)
         assertEquals("preview_integration_test_image_2.jpg", response?.names?.get(1)?.preview)
+    }
+
+    @Test
+    fun uploadEncodedWithoutPreview() {
+        val responseEntity = restTemplate.postForEntity("/image", listOf(image(3)), ImageResponse::class.java)
+
+        assertEquals(HttpStatus.OK, responseEntity.statusCode)
+        val response = responseEntity.body
+        assertEquals(1, response?.count)
+        assertEquals("integration_test_image_3.jpg", response?.names?.get(0)?.image)
+        assertNull(response?.names?.get(0)?.preview)
     }
 
     //TODO add tests for other upload options
