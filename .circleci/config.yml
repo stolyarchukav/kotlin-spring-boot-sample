@@ -30,7 +30,10 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: ./gradlew clean build integrationTest docker
+      - run: ./gradlew clean build integrationTest
+
+      - run: docker build -t test/image-uploader .
+      - run: docker run -p 8080:8080 test/image-uploader
 
       - run:
           name: Save test results
