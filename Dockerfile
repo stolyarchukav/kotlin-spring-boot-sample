@@ -1,14 +1,3 @@
-FROM openjdk:11-jdk as build
-WORKDIR /workspace/app
-
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
-COPY settings.gradle .
-COPY src src
-RUN chmod +x gradlew
-RUN ./gradlew clean build
-
 FROM openjdk:11-jdk
 VOLUME /tmp
 
