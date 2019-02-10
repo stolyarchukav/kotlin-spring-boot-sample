@@ -1,14 +1,14 @@
 **REST API microservice. Kotlin and Spring Boot based image uploader**
 
-##Usage
+## Usage
 
-####Run application from source:
+#### Run application from source:
 ~~~~
 gradlew bootRun
 ~~~~
 
-####API
-#####Upload base64 encoded images from JSON
+#### API
+##### Upload base64 encoded images from JSON
 ~~~~
 curl -H "Content-Type: application/json" --data "[{\"name\" : \"Viareggio\", \"data\" : \"data:image/jpeg;base64,/9j/4AAQSkZJRg...skipped...==\"}]" localhost:8080/image?preview=true
 ~~~~
@@ -24,7 +24,7 @@ curl -H "Content-Type: application/json" --data "[{\"name\" : \"Viareggio\", \"d
 }
 ~~~~
 
-#####Upload images from files
+##### Upload images from files
 ~~~~
 curl -F "files=@Viareggio.jpg" -F "files=@Orvieto.jpg" http://localhost:8080/image?preview=true
 ~~~~
@@ -44,7 +44,7 @@ curl -F "files=@Viareggio.jpg" -F "files=@Orvieto.jpg" http://localhost:8080/ima
 }
 ~~~~
 
-#####Upload image from URLs
+##### Upload image from URLs
 ~~~~
 curl -H "Content-Type: application/x-www-form-urlencoded" -d "url=https://www.destetravel.com/wp-content/uploads/2017/06/pistoia-600x380.jpg" http://localhost:8080/image?preview=true
 ~~~~
@@ -66,15 +66,15 @@ curl -H "Content-Type: application/x-www-form-urlencoded" -d "url=https://www.de
 
 Use _preview=true_ query parameter to generate and save 100x100 image preview
 
-####Build (compile, unit tests, jar)
+#### Build (compile, unit tests, jar)
 ~~~~
 gradlew clean build
 ~~~~
 
-####Integration tests
+#### Integration tests
 ~~~~
 gradlew integrationTest
 ~~~~
 
-####Postman project
+#### Postman project
 _measure.postman_collection.json_
