@@ -10,11 +10,12 @@ jobs:
 
       - checkout
 
+      - setup_remote_docker
+
       - run:
           name: Make gradlew executable
           command: |
             sudo chmod +x gradlew
-            systemctl start docker
 
       - restore_cache:
           keys:
