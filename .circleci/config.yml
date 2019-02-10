@@ -10,6 +10,11 @@ jobs:
 
       - checkout
 
+      - run:
+          name: Make gradlew executable
+          command: |
+            sudo chmod +x gradlew
+
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "build.gradle" }}
