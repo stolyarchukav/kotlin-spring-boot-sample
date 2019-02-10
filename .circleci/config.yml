@@ -28,7 +28,7 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: ./gradlew clean build integrationTest
+      - run: ./gradlew clean build integrationTest docker
 
       - run:
           name: Save test results
