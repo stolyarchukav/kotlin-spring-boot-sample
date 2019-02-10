@@ -2,37 +2,29 @@ package test.api.image.image.storage
 
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
-import test.api.image.image.exception.InternalServiceException
-import test.api.image.image.exception.InvalidRequestException
+import test.api.image.image.base64.Base64Decoder
 import test.api.image.image.logger
 import test.api.image.image.preview.PreviewStorage
 import test.api.image.image.rest.EncodedImage
-import java.io.ByteArrayInputStream
-import java.io.IOException
 import java.io.InputStream
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
-import java.util.*
 import java.util.stream.Collectors
 
 @Component
-class FileImageStorage(val previewStorage: PreviewStorage) : ImageStorage {
+class FileImageStorage(val previewStorage: PreviewStorage, val base64Decoder: Base64Decoder) : ImageStorage {
 
-    val log = logger()
+    private val log = logger()
 
     override fun storeFiles(files: List<MultipartFile>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store image files: {}, with preview: {}", files.size, preview)
         return files.stream().map { file ->
             val fileName = file.originalFilename ?: generateName()
-            try {
-                val storedFile = storeFile(file.inputStream, fileName)
-                val storedPreview = storePreview(preview, storedFile)
-                Pair(fileName, storedPreview)
-            } catch (ex: IOException) {
-                throw InternalServiceException("Cannot save file $fileName")
-            }
+            val storedFile = storeFile(file.inputStream, fileName)
+            val storedPreview = storePreview(preview, storedFile)
+            Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
     }
 
@@ -49,7 +41,8 @@ class FileImageStorage(val previewStorage: PreviewStorage) : ImageStorage {
     override fun storeEncodedBase64(images: List<EncodedImage>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store encoded base 64 images: {}, with preview: {}", images, preview)
         return images.stream().map { image ->
-            val storedFile = storeEncoded(image)
+            val fileName = "${image.name}.jpg"
+            val storedFile = storeFile(base64Decoder.decode(image), fileName)
             val storePreview = storePreview(preview, storedFile)
             Pair(storedFile.fileName.toString(), storePreview)
         }.collect(Collectors.toList())
@@ -71,24 +64,6 @@ class FileImageStorage(val previewStorage: PreviewStorage) : ImageStorage {
     private fun generateName(): String {
         val timestamp = System.currentTimeMillis()
         return "image_$timestamp.jpg"
-    }
-
-    private fun storeEncoded(image: EncodedImage): Path {
-        val base64 = getBase64(image)
-        val inputStream = ByteArrayInputStream(Base64.getDecoder().decode(base64))
-        val fileName = "${image.name}.jpg"
-        return storeFile(inputStream, fileName)
-    }
-
-    private fun getBase64(image: EncodedImage): String {
-        val data = image.data
-        val parts = data.split(",")
-        val format = parts[0]
-        if (format != "data:image/jpeg;base64") {
-            log.warn("Data format is not supported")
-            throw InvalidRequestException("Unsupported data format: $format")
-        }
-        return parts[1]
     }
 
 }
