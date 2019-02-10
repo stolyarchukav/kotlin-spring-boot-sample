@@ -23,7 +23,7 @@ class FileImageStorage(val previewStorage: PreviewStorage, val base64Decoder: Ba
         return files.stream().map { file ->
             val fileName = file.originalFilename ?: generateName()
             val storedFile = storeFile(file.inputStream, fileName)
-            val storedPreview = storePreview(preview, storedFile)
+            val storedPreview = storePreview(storedFile, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
     }
@@ -33,7 +33,7 @@ class FileImageStorage(val previewStorage: PreviewStorage, val base64Decoder: Ba
         return urls.stream().map { url ->
             val fileName = generateName()
             val storedFile = storeFile(url.openStream(), fileName)
-            val storedPreview = storePreview(preview, storedFile)
+            val storedPreview = storePreview(storedFile, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
     }
@@ -43,12 +43,12 @@ class FileImageStorage(val previewStorage: PreviewStorage, val base64Decoder: Ba
         return images.stream().map { image ->
             val fileName = "${image.name}.jpg"
             val storedFile = storeFile(base64Decoder.decode(image), fileName)
-            val storePreview = storePreview(preview, storedFile)
-            Pair(storedFile.fileName.toString(), storePreview)
+            val storePreview = storePreview(storedFile, preview)
+            Pair(fileName, storePreview)
         }.collect(Collectors.toList())
     }
 
-    private fun storePreview(preview: Boolean, storedFile: Path): String? {
+    private fun storePreview(storedFile: Path, preview: Boolean): String? {
         if (preview) {
             return previewStorage.storePreview(storedFile)
         }
