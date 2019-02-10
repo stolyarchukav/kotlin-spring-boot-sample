@@ -1,14 +1,12 @@
 package test.api.image.image.storage
 
-import org.apache.commons.io.FilenameUtils
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import test.api.image.image.exception.InternalServiceException
 import test.api.image.image.exception.InvalidRequestException
 import test.api.image.image.logger
+import test.api.image.image.preview.PreviewStorage
 import test.api.image.image.rest.EncodedImage
-import java.awt.Image
-import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
@@ -22,7 +20,7 @@ import java.util.stream.Collectors
 import javax.imageio.ImageIO
 
 @Component
-class FileImageStorage : ImageStorage {
+class FileImageStorage(val previewStorage: PreviewStorage) : ImageStorage {
 
     val log = logger()
 
@@ -59,19 +57,9 @@ class FileImageStorage : ImageStorage {
         }.collect(Collectors.toList())
     }
 
-    private fun storePreview(path: Path): String {
-        val preview = BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB)
-        val image = ImageIO.read(path.toFile())
-        preview.createGraphics().drawImage(image.getScaledInstance(100, 100, Image.SCALE_SMOOTH), 0, 0, null)
-        val name = FilenameUtils.removeExtension(path.fileName.toString())
-        val fileName = "preview_$name.jpg"
-        ImageIO.write(preview, "jpg", File(fileName))
-        return fileName
-    }
-
     private fun storePreview(preview: Boolean, storedFile: Path): String? {
         if (preview) {
-            return storePreview(storedFile)
+            return previewStorage.storePreview(storedFile)
         }
         return null
     }
