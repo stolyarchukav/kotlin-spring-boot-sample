@@ -69,7 +69,7 @@ task unpack(type: Copy) {
 }
 
 docker {
-	name "${project.group}/${bootJar.baseName}"
+	name "hub.docker.com/${project.group}/samples:${bootJar.baseName}"
 	copySpec.from(tasks.unpack.outputs).into("dependency")
 	buildArgs(['DEPENDENCY': "dependency"])
 }
