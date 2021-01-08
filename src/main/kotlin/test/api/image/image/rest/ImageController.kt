@@ -1,16 +1,14 @@
 package test.api.image.image.rest
 
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import test.api.image.image.storage.ImageStorage
 import java.net.URL
 import java.util.stream.Collectors
 
-@RestController("image")
+@RequestMapping("image")
+@RestController
 final class ImageController(private val storage: ImageStorage) {
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
