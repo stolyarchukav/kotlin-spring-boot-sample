@@ -22,8 +22,7 @@ final class FileImageStorage(private val previewStorage: PreviewStorage, private
         log.info("Store image files: {}, with preview: {}", files.size, preview)
         return files.stream().map { file ->
             val fileName = file.originalFilename ?: generateName()
-            val storedFile = storeFile(file.inputStream, fileName)
-            val storedPreview = storePreview(storedFile, preview)
+            val storedPreview = storeFileAndPreview(file.inputStream, fileName, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
     }
@@ -32,8 +31,7 @@ final class FileImageStorage(private val previewStorage: PreviewStorage, private
         log.info("Store images from URLs: {}, with preview: {}", urls, preview)
         return urls.stream().map { url ->
             val fileName = generateName()
-            val storedFile = storeFile(url.openStream(), fileName)
-            val storedPreview = storePreview(storedFile, preview)
+            val storedPreview = storeFileAndPreview(url.openStream(), fileName, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
     }
@@ -42,9 +40,8 @@ final class FileImageStorage(private val previewStorage: PreviewStorage, private
         log.info("Store encoded base 64 images: {}, with preview: {}", images, preview)
         return images.stream().map { image ->
             val fileName = "${image.name}.jpg"
-            val storedFile = storeFile(base64Decoder.decode(image), fileName)
-            val storePreview = storePreview(storedFile, preview)
-            Pair(fileName, storePreview)
+            val storedPreview = storeFileAndPreview(base64Decoder.decode(image), fileName, preview)
+            Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
     }
 
@@ -64,6 +61,11 @@ final class FileImageStorage(private val previewStorage: PreviewStorage, private
     private fun generateName(): String {
         val timestamp = System.currentTimeMillis()
         return "image_$timestamp.jpg"
+    }
+
+    private fun storeFileAndPreview(stream: InputStream, fileName: String, preview: Boolean): String? {
+        val storedFile = storeFile(stream, fileName)
+        return storePreview(storedFile, preview)
     }
 
 }
