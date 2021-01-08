@@ -20,29 +20,35 @@ final class FileImageStorage(private val previewStorage: PreviewStorage, private
 
     override fun storeFiles(files: List<MultipartFile>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store image files: {}, with preview: {}", files.size, preview)
-        return files.stream().map { file ->
+        val response = files.stream().map { file ->
             val fileName = file.originalFilename ?: generateName()
             val storedPreview = storeFileAndPreview(file.inputStream, fileName, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
+        log.info("Request processed")
+        return response
     }
 
     override fun storeFromUrls(urls: List<URL>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store images from URLs: {}, with preview: {}", urls, preview)
-        return urls.stream().map { url ->
+        val response = urls.stream().map { url ->
             val fileName = generateName()
             val storedPreview = storeFileAndPreview(url.openStream(), fileName, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
+        log.info("Request processed")
+        return response
     }
 
     override fun storeEncodedBase64(images: List<EncodedImage>, preview: Boolean): List<Pair<String, String?>> {
         log.info("Store encoded base 64 images: {}, with preview: {}", images, preview)
-        return images.stream().map { image ->
+        val response = images.stream().map { image ->
             val fileName = "${image.name}.jpg"
             val storedPreview = storeFileAndPreview(base64Decoder.decode(image), fileName, preview)
             Pair(fileName, storedPreview)
         }.collect(Collectors.toList())
+        log.info("Request processed")
+        return response
     }
 
     private fun storePreview(storedFile: Path, preview: Boolean): String? {
